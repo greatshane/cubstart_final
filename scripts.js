@@ -94,9 +94,9 @@ const runCoco = async () => {
 // };
 const getCaption = async () => {
 
-    const clientId = '298a79f00919479da3ace75f2cc3b16d';
-    const clientSecret = '1379e727094c4f8f99e2a6178b8ac4a8';
-    var encodedData = window.btoa(clientId + ':' + clientSecret);
+    // const clientId = '298a79f00919479da3ace75f2cc3b16d';
+    // const clientSecret = '1379e727094c4f8f99e2a6178b8ac4a8';
+    // var encodedData = window.btoa(clientId + ':' + clientSecret);
     // predictions.forEach(async (prediction) => {
     const caption = document.getElementById("caption");
     // const imger = document.getElementById("imgholder");
@@ -105,19 +105,26 @@ const getCaption = async () => {
         // Access token provided
         //const accessToken = "BQCifKY3heTA1SJhD2rrlS4MJGM_0PYYWfSb_hRSAnMl5rijHayzFfYP3IysiY-bwD9DjcaZ0D8Md0tFgOjK8a7APPAi2NXDrByTLglwib-xVWVwSUED-LitiRbOQ_fkfZnNE0KkDkti54q5-J5gwewxYsEm5is";
         // // Store the response from GET request
-        var authorizationHeaderString = 'Authorization: Basic ' + encodedData;
-        const response = await axios.post(
-            'https://accounts.spotify.com/api/token',
-        { headers: {authorizationHeaderString } , 
-        form: {
-            grant_type: 'client_credentials'
-          },
-          json: true
-        }
+        // var authorizationHeaderString = encodedData;
+        // const response = await axios.get(
+        //     'https://accounts.spotify.com/api/token',
+        // { headers: {'Authorization': `Basic ${authorizationHeaderString}` } , 
+        // form: {
+        //     grant_type: 'client_credentials'
+        //   },
+        //   json: true
+        // }
+
+        // );
+
+        let key = 'amOmJ7DIV5epVBvcBUvhTg==CUfN8Pn9aBhusoKR';
+        //var authorizationHeaderString = encodedData;
+        const response = await axios.get(
+            'https://api.api-ninjas.com/v1/nutrition?query=fried rice',
+            {headers: { 'X-Api-Key': 'amOmJ7DIV5epVBvcBUvhTg==CUfN8Pn9aBhusoKR'},}
+        
 
         );
-
-      
 
         
 
@@ -138,10 +145,12 @@ const getCaption = async () => {
 
 
         // Retrieve the data portion of the response
-        const data = response;
+        const data = response.data[0];
         // From the data, get the first entry of the definitions
-        const entry = data;
-        let lineText;
+        const entry = data.name;
+        const entry2 = data.calories;
+        console.log(entry)
+        let lineText = entry;
         //let imageText;
         // if (entry.example) {
         //     lineText = entry.example;
@@ -154,12 +163,14 @@ const getCaption = async () => {
         // lineText += " #" + entity;
 
         // imageText = entry.image_url;
-        lineText = entry.access_token;
+        //lineText = entry;
         const line = document.createElement("p");
         line.innerText = lineText;
         
         caption.appendChild(line);
-
+        const line2 = document.createElement("p");
+        line2.innerText = entry2;
+        caption.appendChild(line2);
         // const imag = document.createElement("img");
         // imag.src = imageText; 
         // imag.height = 200;
@@ -179,7 +190,7 @@ const input = document.getElementById("img-upload");
 
 input.addEventListener("change", (event) => {
     const caption = document.getElementById("caption");
-    caption.replaceChildren();
+    //caption.replaceChildren();
     const img = document.getElementById("img");
     img.src = URL.createObjectURL(event.target.files[0])
     // What should you run to drive the execuation of all your functions?
