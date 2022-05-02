@@ -85,6 +85,7 @@ foodButton.addEventListener("click", () => {
     const label = document.getElementById("food_label");
     if (foodList.length != 0) {
         var newlabel = document.createElement("Label");
+        newlabel.style.color = "#69a2ec";
         newlabel.innerHTML = foodList.toString();
         label.appendChild(newlabel);
     }
@@ -94,6 +95,7 @@ caloriesButton.addEventListener("click", () => {
     const label = document.getElementById("calories_label");
     if (caloriesList.length != 0) {
         var newlabel = document.createElement("Label");
+        newlabel.style.color = "#69a2ec";
         newlabel.innerHTML = Math.floor((caloriesList.reduce((partialSum, a) => partialSum + a, 0)));
         label.appendChild(newlabel);
     }
