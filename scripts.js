@@ -1,3 +1,7 @@
+// JS arrays
+var caloriesList = []
+var foodList = []
+
 
 const runCoco = async (input) => {
     // BEGIN PART 3
@@ -33,8 +37,9 @@ const getCaption = async (input) => {
 
         // From the data, get the name and calories (prob changing later)
         const entry = data.name;
+        foodList.push(entry)
         const entry2 = data.calories;
-        
+        caloriesList.push(entry2)
     
         const line = document.createElement("p");
         line.innerText = 'Food: ' + entry;
@@ -58,6 +63,9 @@ const taskName = document.getElementById("task-name");
 const submitButton = document.getElementById("submit");
 const clearButton = document.getElementById("clear");
 
+const foodButton = document.getElementById("food");
+const caloriesButton = document.getElementById("calories");
+
 //Submit Button Listener
 submitButton.addEventListener("click", () => {
     if (taskName.value != "") {
@@ -69,8 +77,27 @@ submitButton.addEventListener("click", () => {
 clearButton.addEventListener("click", () => {
     // taskList.replaceChildren();
     taskName.value = "";
+    foodList = []
+    caloriesList = []
   });
   
+foodButton.addEventListener("click", () => {
+    const label = document.getElementById("food_label");
+    if (foodList.length != 0) {
+        var newlabel = document.createElement("Label");
+        newlabel.innerHTML = foodList.toString();
+        label.appendChild(newlabel);
+    }
+  });
+
+caloriesButton.addEventListener("click", () => {
+    const label = document.getElementById("calories_label");
+    if (caloriesList.length != 0) {
+        var newlabel = document.createElement("Label");
+        newlabel.innerHTML = Math.floor((caloriesList.reduce((partialSum, a) => partialSum + a, 0)));
+        label.appendChild(newlabel);
+    }
+  });
 
 //OLD** image button listener (don't need rn)
 input.addEventListener("change", (event) => {
