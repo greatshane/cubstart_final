@@ -3,17 +3,27 @@ html * {
   font-weight: 100;
 }
 
+head{
+  position:relative;
+  top:0px;
+  margin-top: 0;
+  margin: 0%;
+  }
+
 body {
-  background: rgb(255, 229, 67);
-  background: linear-gradient(
-    290deg,
-    rgb(91, 235, 98) 0%,
-    rgb(36, 145, 228) 100%
-  );
+  background: rgb(13, 115, 204);
+  vertical-align: middle;
+  text-align: center;
+  margin: 10%;
+  margin-top: 10;
+
+
+
 }
 
 input[type="file"] {
   display: none;
+  
 }
 
 canvas {
