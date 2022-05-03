@@ -1,10 +1,83 @@
-// JS arrays
 var caloriesList = []
 var foodList = []
 var sugarList = []
 
+const runCoco = async () => {
+    const net = await cocoSsd.load();
+    console.log("loaded correctly");
+    imageRecog(net);
+};
+
+const imageRecog = async (net) => {
+    const img = document.getElementById("img");
+    const imgWidth = img.width;
+    const imgHeight = img.height;
+    const canvas = document.getElementById("mesh");
+    canvas.width = imgWidth;
+    canvas.height = imgHeight;
+    
+ 
+    const obj = await net.detect(img);
+ 
+    const ctx = canvas.getContext("2d");
+ 
+    // drawRect(obj, ctx);
+  
+    getCaption(obj);
+    
+    img.style.visibility = "visible";
+};
+
+// const drawRect = (predictions, ctx) => {
+    
+//     predictions.forEach((prediction) => {
+//         // Extract boxes and classes
+//         const [x, y, width, height] = prediction["bbox"];
+//         const text = prediction["class"];
+
+//         // Set styling
+//         const color = Math.floor(Math.random() * 16777215).toString(16);
+//         ctx.strokeStyle = "#" + color;
+//         ctx.font = "18px Arial";
+
+//         // Draw rectangles and text
+//         ctx.beginPath();
+//         ctx.fillStyle = "#" + color;
+//         ctx.fillText(text, x, y);
+//         ctx.rect(x, y, width, height);
+//         ctx.stroke();
+//     });
+// };
+const getCaption = (predictions) => {
+    predictions.forEach(async (prediction) => {
+        const caption = document.getElementById("caption");
+        const imger = document.getElementById("imgholder");
+        const entity = prediction["class"];
+        try {
+            // Access token provided
+            const accessToken = "574a554e5a8cad9b2666048e80c20365f33323fc";
+            // Store the response from GET request
+            const response = await axios.get(
+            `https://owlbot.info/api/v4/dictionary/${entity}`,
+            { headers: { Authorization: `Token ${accessToken}` } }
+            );
+            // Retrieve the data portion of the response
+            const data = response.data;
+       
+            let lineText = data.word;
+            // Input the word into our getInfo functions which will do the other APi access
+            getInfo(lineText);
 
 
+           
+        } catch (error) {
+            console.log(error);
+        }
+    })
+}
+
+// Input is the word that the image recognition API outputs.
+// So upload photo of apple -> Image API says its apple -> send "apple" to this function
 const getInfo = async (input) => {
 
     //"Caption" is basically what I'm using as a label rn
@@ -14,7 +87,7 @@ const getInfo = async (input) => {
    
         //my Authentication Key
         let key = 'amOmJ7DIV5epVBvcBUvhTg==CUfN8Pn9aBhusoKR';
-        //var authorizationHeaderString = encodedData;
+        
         let query = input;
 
         //API get 
@@ -41,11 +114,9 @@ const getInfo = async (input) => {
       
           const line = document.createElement("p");
           line.innerText = 'Food: ' + entry + '    ';
-          //caption.appendChild(line);
-          //const line2 = document.createElement("p");
+          
           line.innerText += 'Calories: ' + entry2 + '    ';
-          //caption.appendChild(line2);
-          //const line3 = document.createElement("p");
+          
           line.innerText += 'Sugar: ' + entry3;
           caption.appendChild(line);
         }
@@ -57,9 +128,6 @@ const getInfo = async (input) => {
 }
 
 
-//for the text button input
-const taskName = document.getElementById("task-name");
-const submitButton = document.getElementById("submit");
 const clearButton = document.getElementById("clear");
 
 const foodButton = document.getElementById("food");
@@ -67,12 +135,8 @@ const caloriesButton = document.getElementById("calories");
 const sugarButton = document.getElementById("sugar");
 
 
-//Submit Button Listener
-submitButton.addEventListener("click", () => {
-    if (taskName.value != "") {
-      getInfo(taskName.value)
-    }
-  });
+
+
   
 //Clear Button Listener
 clearButton.addEventListener("click", () => {
@@ -81,16 +145,20 @@ clearButton.addEventListener("click", () => {
     const foodLabel = document.getElementById("food_label");
     const caloriesLabel = document.getElementById("calories_label");
     const sugarLabel = document.getElementById("sugar_label");
+    const input = document.getElementById("img");
     caption.replaceChildren();
     foodLabel.replaceChildren();
     caloriesLabel.replaceChildren();
     sugarLabel.replaceChildren();
-    taskName.value = "";
+    img.style.visibility = "hidden";
+    
+    
     foodList = []
     caloriesList = []
     sugarList = []
   });
   
+// List all food button listener
 foodButton.addEventListener("click", () => {
     const label = document.getElementById("food_label");
     if (foodList.length != 0) {
@@ -102,6 +170,7 @@ foodButton.addEventListener("click", () => {
     }
   });
 
+// List total calories button listener
 caloriesButton.addEventListener("click", () => {
     const label = document.getElementById("calories_label");
     if (caloriesList.length != 0) {
@@ -113,7 +182,7 @@ caloriesButton.addEventListener("click", () => {
     }
   });
 
-
+// List total sugar button listener
 sugarButton.addEventListener("click", () => {
     const label = document.getElementById("sugar_label");
     if (sugarList.length != 0) {
@@ -127,3 +196,12 @@ sugarButton.addEventListener("click", () => {
 
 
 
+const input = document.getElementById("img-upload");
+
+input.addEventListener("change", (event) => {
+    const caption = document.getElementById("caption");
+    caption.replaceChildren();
+    const img = document.getElementById("img");
+    img.src = URL.createObjectURL(event.target.files[0])
+    runCoco();
+})
