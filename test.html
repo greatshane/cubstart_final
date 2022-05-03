@@ -1,3 +1,5 @@
+<!-- Page 2 with the tensor flow and neural network is inspired by Cubstart Homework 3. -->
+<!-- PAGE 2 -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -30,27 +32,29 @@
 </head>
 
 <body>
+
+    <div class="header">
+        <h1>Welcome to Image Recognition Mode :D</h1>
+        
+      </div>
     <!-- All the labels and button we need for computations -->
     <div id="food_label"></div>
     <button class="button" id="food">Return All Food</button>
     <br>
-    <div id="calories_label"></div>
-    <button class="button" id="calories">Calculate Calories</button>
+    <button class="button" id="total">Calculate Total Nutrition</button>
+    <div id="total_label"></div>
     <br>
-    <div id="sugar_label"></div>
-    <button class="button" id="sugar">Calculate Sugar</button>
+    <a href="index.html">
+        <button>Back Button</button></a>
     <br>
+    <button class="button" id="clear">Clear</button>
+    
     <!-- The card which will store our images -->
     <div id="card">
         <label class="custom-file-upload">
             <input type="file" id="img-upload" accept="image/*" title=" "/>
             Upload Image
         </label>
-        <!-- The back button -->
-        <a href="index.html">
-            <button>Back Button</button></a>
-        <button class="button" id="clear">Clear</button>
-            
         
     
         <div class="container">
@@ -61,20 +65,10 @@
         <div id="imgholder"></div>
         
     </div>
-
-    
-
-    
-        
-    
-    
-   
-   
-    <!-- BEGIN PART 2 -->
+  
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
-    <!-- END PART 2 -->
     <script src="./scripts2.js"></script>
     
 </body>

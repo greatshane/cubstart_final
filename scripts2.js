@@ -1,13 +1,26 @@
+// Page 2 with the tensor flow and neural network is inspired by Cubstart Homework 3.
+
+// JS arrays
 var caloriesList = []
 var foodList = []
 var sugarList = []
+var totalFatList = []
+var satFatList = []
+var proteinList = []
+var sodiumList = []
+var potassiumList = []
+var cholesterolList = []
+var carbsList = []
+var fiberList = []
 
+// loads cocoSsd and calls imageRecog
 const runCoco = async () => {
     const net = await cocoSsd.load();
     console.log("loaded correctly");
     imageRecog(net);
 };
 
+// calls getCaption of object and makes image visible
 const imageRecog = async (net) => {
     const img = document.getElementById("img");
     const imgWidth = img.width;
@@ -19,39 +32,20 @@ const imageRecog = async (net) => {
  
     const obj = await net.detect(img);
  
-    const ctx = canvas.getContext("2d");
+    
  
-    // drawRect(obj, ctx);
+    
   
     getCaption(obj);
     
     img.style.visibility = "visible";
 };
 
-// const drawRect = (predictions, ctx) => {
-    
-//     predictions.forEach((prediction) => {
-//         // Extract boxes and classes
-//         const [x, y, width, height] = prediction["bbox"];
-//         const text = prediction["class"];
-
-//         // Set styling
-//         const color = Math.floor(Math.random() * 16777215).toString(16);
-//         ctx.strokeStyle = "#" + color;
-//         ctx.font = "18px Arial";
-
-//         // Draw rectangles and text
-//         ctx.beginPath();
-//         ctx.fillStyle = "#" + color;
-//         ctx.fillText(text, x, y);
-//         ctx.rect(x, y, width, height);
-//         ctx.stroke();
-//     });
-// };
+// uses owlbot api to identify image and then calls getinfo on data reponse
 const getCaption = (predictions) => {
     predictions.forEach(async (prediction) => {
-        const caption = document.getElementById("caption");
-        const imger = document.getElementById("imgholder");
+        // const caption = document.getElementById("caption");
+        // const imger = document.getElementById("imgholder");
         const entity = prediction["class"];
         try {
             // Access token provided
@@ -78,6 +72,8 @@ const getCaption = (predictions) => {
 
 // Input is the word that the image recognition API outputs.
 // So upload photo of apple -> Image API says its apple -> send "apple" to this function
+// Calls the API with these word/s as queries and uses the received 
+//information to fill in above arrays as well as display calories and sugar to the screen
 const getInfo = async (input) => {
 
     //"Caption" is basically what I'm using as a label rn
@@ -111,6 +107,14 @@ const getInfo = async (input) => {
 
           const entry3 = data.sugar_g;
           sugarList.push(entry3);
+          totalFatList.push(data.fat_total_g);
+          satFatList.push(data.fat_saturated_g);
+          proteinList.push(data.protein_g);
+          sodiumList.push(data.sodium_mg);
+          potassiumList.push(data.potassium_mg);
+          cholesterolList.push(data.cholesterol_mg);
+          carbsList.push(data.carbohydrates_total_g);
+          fiberList.push(data.fiber_g);
       
           const line = document.createElement("p");
           line.innerText = 'Food: ' + entry + '    ';
@@ -131,8 +135,8 @@ const getInfo = async (input) => {
 const clearButton = document.getElementById("clear");
 
 const foodButton = document.getElementById("food");
-const caloriesButton = document.getElementById("calories");
-const sugarButton = document.getElementById("sugar");
+const totalButton = document.getElementById("total");
+
 
 
 
@@ -140,22 +144,29 @@ const sugarButton = document.getElementById("sugar");
   
 //Clear Button Listener
 clearButton.addEventListener("click", () => {
-    // taskList.replaceChildren();
     const caption = document.getElementById("caption");
     const foodLabel = document.getElementById("food_label");
-    const caloriesLabel = document.getElementById("calories_label");
-    const sugarLabel = document.getElementById("sugar_label");
+    const totalLabel = document.getElementById("total_label");
+    
     const input = document.getElementById("img");
     caption.replaceChildren();
     foodLabel.replaceChildren();
-    caloriesLabel.replaceChildren();
-    sugarLabel.replaceChildren();
+    totalLabel.replaceChildren();
+    
     img.style.visibility = "hidden";
     
     
     foodList = []
     caloriesList = []
     sugarList = []
+    totalFatList = []
+    satFatList = []
+    proteinList = []
+    sodiumList = []
+    potassiumList = []
+    cholesterolList = []
+    carbsList = []
+    fiberList = []
   });
   
 // List all food button listener
@@ -171,33 +182,30 @@ foodButton.addEventListener("click", () => {
   });
 
 // List total calories button listener
-caloriesButton.addEventListener("click", () => {
-    const label = document.getElementById("calories_label");
+totalButton.addEventListener("click", () => {
+    const label = document.getElementById("total_label");
     if (caloriesList.length != 0) {
         label.replaceChildren();
         var newlabel = document.createElement("Label");
         newlabel.style.color = "#69a2ec";
-        newlabel.innerHTML = "You have eaten: " + Math.floor((caloriesList.reduce((partialSum, a) => partialSum + a, 0))) + " calories.";
+        newlabel.innerHTML = "Today you have eaten: ";
+        newlabel.innerHTML += "<br> " + Math.floor((caloriesList.reduce((partialSum, a) => partialSum + a, 0))) + " calories.";
+        newlabel.innerHTML +=  "<br> " + Math.floor((sugarList.reduce((partialSum, a) => partialSum + a, 0))) + "g sugar.";
+        newlabel.innerHTML += "<br>  " + Math.floor((totalFatList.reduce((partialSum, a) => partialSum + a, 0))) + "g fat.";
+        newlabel.innerHTML += "<br>  " + Math.floor((satFatList.reduce((partialSum, a) => partialSum + a, 0))) + "g saturated fat.";
+        newlabel.innerHTML += "<br>  " + Math.floor((proteinList.reduce((partialSum, a) => partialSum + a, 0))) + "g protein.";
+        newlabel.innerHTML += "<br>  " + Math.floor((sodiumList.reduce((partialSum, a) => partialSum + a, 0))) + "mg sodium.";
+        newlabel.innerHTML += "<br>  " + Math.floor((potassiumList.reduce((partialSum, a) => partialSum + a, 0))) + "mg potassium.";
+        newlabel.innerHTML += "<br>  " + Math.floor((cholesterolList.reduce((partialSum, a) => partialSum + a, 0))) + "mg cholesterol.";
+        newlabel.innerHTML += "<br>  " + Math.floor((carbsList.reduce((partialSum, a) => partialSum + a, 0))) + "g carbohydrates.";
+        newlabel.innerHTML += "<br>  " + Math.floor((fiberList.reduce((partialSum, a) => partialSum + a, 0))) + "g fiber.";
         label.appendChild(newlabel);
     }
   });
-
-// List total sugar button listener
-sugarButton.addEventListener("click", () => {
-    const label = document.getElementById("sugar_label");
-    if (sugarList.length != 0) {
-        label.replaceChildren();
-        var newlabel = document.createElement("Label");
-        newlabel.style.color = "#69a2ec";
-        newlabel.innerHTML = "You have eaten: " + Math.floor((sugarList.reduce((partialSum, a) => partialSum + a, 0))) + " grams of sugar.";
-        label.appendChild(newlabel);
-    }
-  });
-
-
 
 const input = document.getElementById("img-upload");
 
+// If image is uploaded this gets triggered
 input.addEventListener("change", (event) => {
     const caption = document.getElementById("caption");
     caption.replaceChildren();
